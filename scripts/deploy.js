@@ -18,9 +18,13 @@ async function main() {
 
   // 3) 部署 SecurityToken
   const ST = await hre.ethers.getContractFactory("SecurityToken");
-  const st = await ST.deploy("Acme RWA Fund", "ARF", deployer.address, await comp.getAddress());
+  const st = await ST.deploy("GPI Fund", "GPI", deployer.address, await comp.getAddress());
   await st.waitForDeployment();
   console.log("SecurityToken:", await st.getAddress());
+
+  // 授予转移代理角色
+  const TA_ROLE = await st.TRANSFER_AGENT_ROLE();
+  await st.grantRole(TA_ROLE, deployer.address);
 
   // 4) 基础规则演示（可选）
   // 允许美国840、欧盟某国等司法辖区
